@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/mainbackground">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#f5f5f5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Your Crop"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_gravity="center"/>
+
+        <!--<ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/abc_ic_ab_back_material"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back" /> -->
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/selectedCropLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Selected Crop"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"/>
+
+    <LinearLayout
+        android:id="@+id/selectedCropLayout"
+        android:layout_width="407dp"
+        android:layout_height="88dp"
+        android:layout_marginTop="8dp"
+        android:background="#f5f5f5"
+        android:elevation="4dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/selectedCropLabel">
+
+        <ImageButton
+            android:id="@+id/soyaBeanImageView"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="10dp"
+            android:contentDescription="Soya Bean"
+            android:src="@drawable/soybean_svgrepo_com"
+            android:background="?android:attr/selectableItemBackgroundBorderless"/>
+        <TextView
+            android:id="@+id/soyaBeanTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="Soya Bean"
+            android:textColor="#333333"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/otherCropsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Other Crops"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        app:layout_constraintTop_toBottomOf="@id/selectedCropLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"/>
+
+    <GridLayout
+        android:layout_width="410dp"
+        android:layout_height="586dp"
+        android:layout_marginTop="8dp"
+        android:alignmentMode="alignMargins"
+        android:columnCount="3"
+        android:elevation="4dp"
+        android:columnOrderPreserved="false"
+        android:padding="16dp"
+        android:rowCount="2"
+        android:background="#f5f5f5"
+        app:layout_constraintTop_toBottomOf="@id/otherCropsLabel">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/carrotImageView"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/carrot_svgrepo_com"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Carrot" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cotton"
+                android:textColor="#333333"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/spinachImageView"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:contentDescription="Spinach"
+                android:src="@drawable/leafy_green_svgrepo_com"
+                android:background="?android:attr/selectableItemBackgroundBorderless"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cucumber"
+                android:textColor="#333333"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/cabbageImageView"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:contentDescription="Cabbage"
+                android:src="@drawable/cabbage_svgrepo_com"
+                android:background="?android:attr/selectableItemBackgroundBorderless"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cabbage"
+                android:textColor="#333333"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/appleImageView"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:contentDescription="Apple"
+                android:src="@drawable/apple_svgrepo_com"
+                android:background="?android:attr/selectableItemBackgroundBorderless"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Apple"
+                android:textColor="#333333"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </GridLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
