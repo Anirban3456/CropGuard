@@ -45,7 +45,7 @@ public class TFLiteHelper {
         TensorImage inputImage = TensorImage.fromBitmap(bitmap);
 
         ImageProcessor imageProcessor = new ImageProcessor.Builder()
-                .add(new ResizeOp(224, 224, ResizeOp.ResizeMethod.BILINEAR)) // Adjust size if needed
+                .add(new ResizeOp(299, 299, ResizeOp.ResizeMethod.BILINEAR)) // Adjust size if needed
                 .add(new NormalizeOp(0, 255))
                 .build();
         TensorImage processedImage = imageProcessor.process(inputImage);
