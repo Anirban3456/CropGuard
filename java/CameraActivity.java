@@ -23,8 +23,8 @@ public class CameraActivity extends AppCompatActivity {
 
     private static final int CAMERA_PERMISSION_REQUEST = 100;
     private static final int GALLERY_PERMISSION_REQUEST = 101;
-    private static final int IMAGE_WIDTH = 224; // Adjust to your model's input width
-    private static final int IMAGE_HEIGHT = 224; // Adjust to your model's input height
+    private static final int IMAGE_WIDTH = 299; // Adjust to your model's input width
+    private static final int IMAGE_HEIGHT = 299; // Adjust to your model's input height
 
     private ImageButton captureButton;
     private ImageButton galleryButton;

@@ -2,11 +2,13 @@ package com.example.cropguard;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,6 +24,9 @@ import org.tensorflow.lite.support.image.ops.ResizeOp;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class TFLiteClassifier extends AppCompatActivity {
@@ -30,6 +35,7 @@ public class TFLiteClassifier extends AppCompatActivity {
     private TextView diseaseTextView, confidenceTextView, notesTextView;
     private LinearLayout causesLayout, remediesLayout, preventionLayout;
     private Button nextButton;
+    private static final String API_URL = "https://cropguard-1wyl.onrender.com/analyze/";
 
     private static final String[] CLASS_LABELS = {
             "Apple___Apple_scab", "Apple___Black_rot", "Apple___Cedar_apple_rust", "Apple___healthy",
@@ -99,7 +105,7 @@ public class TFLiteClassifier extends AppCompatActivity {
     private void runInference(Bitmap bitmap) {
         TensorImage inputImage = TensorImage.fromBitmap(bitmap);
         ImageProcessor imageProcessor = new ImageProcessor.Builder()
-                .add(new ResizeOp(224, 224, ResizeOp.ResizeMethod.BILINEAR))
+                .add(new ResizeOp(299, 299, ResizeOp.ResizeMethod.BILINEAR))
                 .add(new NormalizeOp(0, 255))
                 .build();
         TensorImage processedImage = imageProcessor.process(inputImage);
@@ -107,9 +113,40 @@ public class TFLiteClassifier extends AppCompatActivity {
 
         tflite.run(processedImage.getBuffer(), outputBuffer.getBuffer().rewind());
 
-        String jsonOutput = getJsonOutput(outputBuffer);
-        if (jsonOutput == null) return;
-        parseAndDisplayJson(jsonOutput);
+        // Get the prediction results
+        float[] confidences = outputBuffer.getFloatArray();
+        int maxPos = 0;
+        float maxConfidence = 0;
+        for (int i = 0; i < confidences.length; i++) {
+            if (confidences[i] > maxConfidence) {
+                maxConfidence = confidences[i];
+                maxPos = i;
+            }
+        }
+
+        String predictedClass = CLASS_LABELS[maxPos];
+        float confidence = maxConfidence;
+        String imageSize = "299x299";
+
+        // Create JSON object with prediction data
+        try {
+            JSONObject predictionData = new JSONObject();
+            predictionData.put("class_name", predictedClass);
+            predictionData.put("confidence", confidence);
+            predictionData.put("image_size", imageSize);
+
+            // Send data to API
+            new SendPredictionDataTask().execute(predictionData);
+
+            // Continue with existing display logic
+            String jsonOutput = getJsonOutput(outputBuffer);
+            if (jsonOutput == null) return;
+            parseAndDisplayJson(jsonOutput);
+
+        } catch (JSONException e) {
+            Log.e("TFLiteClassifier", "Error creating prediction JSON", e);
+            Toast.makeText(this, "Error processing prediction data", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private String getJsonOutput(TensorBuffer outputBuffer) {
@@ -191,6 +228,46 @@ public class TFLiteClassifier extends AppCompatActivity {
         super.onDestroy();
         if (tflite != null) {
             tflite.close();
+        }
+    }
+
+    private class SendPredictionDataTask extends AsyncTask<JSONObject, Void, String> {
+        @Override
+        protected String doInBackground(JSONObject... params) {
+            try {
+                URL url = new URL(API_URL);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setDoOutput(true);
+
+                try (OutputStream os = conn.getOutputStream()) {
+                    byte[] input = params[0].toString().getBytes(StandardCharsets.UTF_8);
+                    os.write(input, 0, input.length);
+                }
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    // Read response if needed
+                    // For now, we'll just return success
+                    return "Success";
+                } else {
+                    return "Error: " + responseCode;
+                }
+
+            } catch (Exception e) {
+                Log.e("TFLiteClassifier", "Error sending prediction data", e);
+                return "Error: " + e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (!result.startsWith("Success")) {
+                Toast.makeText(TFLiteClassifier.this, 
+                    "Error sending prediction data: " + result, 
+                    Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
